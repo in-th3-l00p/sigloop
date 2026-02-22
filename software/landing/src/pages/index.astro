@@ -14,14 +14,15 @@ import { Button } from "@/components/ui/button"
 		<meta name="generator" content={Astro.generator} />
 		<title>sigloop</title>
 	</head>
-	<body class="flex flex-col min-h-screen">
+	<body class="flex flex-col min-h-screen bg-zinc-100">
 		<section id="hero" class="w-full h-screen flex flex-col items-center justify-center">
 			<img src="/logo.png" alt="logo symbol" class="invert w-32">
-			<h1 class="text-8xl font-semibold mt-8">sigloop</h1>
-			<h2 class="text-lg mt-4">friendly wallet abstraction made 4 agents</h2>
+			<h1 class="text-8xl font-semibold mt-6">sigloop</h1>
+			<h2 class="text-lg mt-3">friendly wallet abstraction made 4 agents</h2>
 
-			<div class="grid grid-cols-2">
+			<div class="grid grid-cols-2 mt-6 gap-3">
 				<Button>get started</Button>
+				<Button variant="outline">learn more</Button>
 			</div>
 		</section>
 	</body>
