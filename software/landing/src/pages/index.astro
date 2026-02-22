@@ -1,5 +1,8 @@
 ---
 
+import "../styles/global.css";
+import { Button } from "@/components/ui/button"
+
 ---
 
 <html lang="en">
@@ -9,9 +12,17 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>sigloop</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
+	<body class="flex flex-col min-h-screen">
+		<section id="hero" class="w-full h-screen flex flex-col items-center justify-center">
+			<img src="/logo.png" alt="logo symbol" class="invert w-32">
+			<h1 class="text-8xl font-semibold mt-8">sigloop</h1>
+			<h2 class="text-lg mt-4">friendly wallet abstraction made 4 agents</h2>
+
+			<div class="grid grid-cols-2">
+				<Button>get started</Button>
+			</div>
+		</section>
 	</body>
 </html>
