@@ -1,4 +1,8 @@
-<section id="about" class="mt-48">
+---
+import { slide } from "astro:transitions";
+---
+
+<section id="about" class="mt-48" transition:animate={slide({ duration: "0.6s" })}>
 	<div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 		<div
 			class="relative isolate overflow-hidden bg-zinc-900 px-6 py-20 sm:rounded-3xl sm:px-10 sm:py-24 lg:py-24 xl:px-24"
@@ -48,7 +52,7 @@
 								scoped agent wallets.
 							</dt>
 							<dd class="inline">
-								each agent gets exactly the access it needs: specific contracts, tokens, time windows. revoke instantly.
+								per-agent access to specific contracts, tokens, and time windows. revoke instantly.
 							</dd>
 						</div>
 						<div class="relative">
@@ -70,7 +74,7 @@
 								native x402 payment automation.
 							</dt>
 							<dd class="inline">
-								agents auto-detect 402 responses, validate against their budget, sign, and retry \w zero developer code.
+								auto-detect 402 responses, validate budgets, sign, and retry — zero developer code.
 							</dd>
 						</div>
 						<div class="relative">
@@ -95,7 +99,7 @@
 								interoperable by default.
 							</dt>
 							<dd class="inline">
-								works across any agent framework, runtime, or deployment target. pre-built modules for social recovery, chain abstraction, DeFi actions, and passkey onboarding.
+								any agent framework, runtime, or deployment target. pre-built modules for recovery, chain abstraction, and DeFi.
 							</dd>
 						</div>
 					</dl>

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
 import DevBanner from "@/components/DevBanner.astro";
 import Hero from "@/components/Hero.astro";
 import Introduction from "@/components/Introduction.astro";
@@ -15,8 +16,9 @@ import Footer from "@/components/Footer.astro";
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Wallet abstraction for AI agents — session keys, scoped permissions, and native x402 payment automation." />
-		<title>sigloop — wallets for agents that pay</title>
+		<meta name="description" content="wallet abstraction for AI agents — session keys, scoped permissions, and native x402 payment automation." />
+		<title>✧ sigloop ✧</title>
+		<ClientRouter />
 	</head>
 	<body class="flex flex-col min-h-screen bg-zinc-100">
 		<DevBanner />
