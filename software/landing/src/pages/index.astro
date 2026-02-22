@@ -14,6 +14,18 @@ import { Button } from "@/components/ui/button";
 		<title>sigloop — wallets for agents that pay</title>
 	</head>
 	<body class="flex flex-col min-h-screen bg-zinc-100">
+		<div id="dev-banner" class="flex items-center justify-between gap-x-6 bg-zinc-900 px-6 py-2.5 sm:pr-3.5 lg:pl-8 fixed w-screen z-90">
+			<p class="text-sm/6 text-white">
+				<strong class="font-semibold">early development</strong><svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"><circle r="1" cx="1" cy="1" /></svg>this project is currently in development; what you see here is a presentation of the idea.
+			</p>
+			<button type="button" class="-m-3 flex-none p-3 focus-visible:-outline-offset-4" onclick="document.getElementById('dev-banner').remove()">
+				<span class="sr-only">Dismiss</span>
+				<svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-white">
+					<path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+				</svg>
+			</button>
+		</div>
+
 		<section
 			id="hero"
 			class="w-full h-screen flex flex-col items-center justify-center"
@@ -23,7 +35,7 @@ import { Button } from "@/components/ui/button";
 			<h2 class="text-lg mt-3 text-zinc-500">wallets for agents that pay</h2>
 
 			<div class="grid grid-cols-2 mt-6 gap-3">
-				<Button>join waitlist</Button>
+				<Button>read whitepaper</Button>
 				<Button variant="outline">learn more</Button>
 			</div>
 		</section>
@@ -31,13 +43,14 @@ import { Button } from "@/components/ui/button";
 		<section id="introduction" class="mx-auto max-w-7xl px-6 lg:px-8">
 			<div class="mx-auto max-w-2xl lg:max-w-none">
 				<div class="text-center">
+					<p class="text-sm font-semibold text-violet-600 tracking-wide uppercase">built on ERC-4337</p>
 					<h2
-						class="text-4xl font-semibold tracking-tight text-balance text-zinc-900 sm:text-5xl"
+						class="mt-2 text-4xl font-semibold tracking-tight text-balance text-zinc-900 sm:text-5xl"
 					>
 						the payment layer<br/> the agentic web needs
 					</h2>
 					<p class="mt-4 text-lg/8 text-zinc-600">
-						giving AI agents scoped wallets with native x402 payment automation<br>without handing them a private key
+						giving AI agents smart contract wallets with safety limitations<br>with session keys, scoped permissions, and native x402 payment automation
 					</p>
 				</div>
 				<dl
@@ -45,7 +58,7 @@ import { Button } from "@/components/ui/button";
 				>
 					<div class="flex flex-col p-8">
 						<dt class="text-sm/6 font-semibold text-zinc-600">
-							time-bound, contract-scoped permissions that can be revoked instantly
+							ERC-4337 smart accounts with time-bound, contract-scoped permissions that can be revoked instantly
 						</dt>
 						<dd
 							class="order-first text-3xl font-semibold tracking-tight text-zinc-900"
@@ -55,7 +68,7 @@ import { Button } from "@/components/ui/button";
 					</div>
 					<div class="flex flex-col p-8">
 						<dt class="text-sm/6 font-semibold text-zinc-600">
-							agents detect 402 responses, validate budgets, sign, and retry automatically
+							agents detect 402 responses, validate budgets, sign UserOps, and retry automatically
 						</dt>
 						<dd
 							class="order-first text-3xl font-semibold tracking-tight text-zinc-900"
@@ -65,7 +78,7 @@ import { Button } from "@/components/ui/button";
 					</div>
 					<div class="flex flex-col p-8">
 						<dt class="text-sm/6 font-semibold text-zinc-600">
-							no seed phrases or private key management for end users
+							ERC-4337 account abstraction eliminates seed phrases; onboard with passkeys alone
 						</dt>
 						<dd
 							class="order-first text-3xl font-semibold tracking-tight text-zinc-900"
@@ -75,7 +88,7 @@ import { Button } from "@/components/ui/button";
 					</div>
 					<div class="flex flex-col p-8">
 						<dt class="text-sm/6 font-semibold text-zinc-600">
-							per-agent spending limits, token allowlists, and real-time audit logs
+							per-agent spending limits, token allowlists, and real-time audit logs enforced on-chain
 						</dt>
 						<dd
 							class="order-first text-3xl font-semibold tracking-tight text-zinc-900"
@@ -199,6 +212,20 @@ import { Button } from "@/components/ui/button";
 							class="aspect-1155/678 w-288.75 bg-linear-to-tr from-[#7C3AED] to-[#8B5CF6] opacity-25"
 						>
 						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="cta" class="mt-48">
+			<div class="px-6 lg:px-8">
+				<div class="mx-auto max-w-2xl text-center">
+					<p class="text-sm font-semibold text-violet-600 tracking-wide uppercase">sigloop account adbstraction</p>
+					<h2 class="mt-2 text-4xl font-semibold tracking-tight text-balance text-zinc-900 sm:text-5xl">learn more</h2>
+					<p class="mx-auto mt-6 max-w-xl text-lg/8 text-pretty text-zinc-600">session keys, scoped permissions & native x402 payment automation,<br>the modern abstraction of web3 for a better user experience and security</p>
+					<div class="mt-10 flex items-center justify-center gap-x-4">
+						<Button>read whitepaper</Button>
+						<Button variant="outline">learn more <span aria-hidden="true">→</span></Button>
 					</div>
 				</div>
 			</div>
