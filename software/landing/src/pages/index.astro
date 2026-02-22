@@ -12,16 +12,14 @@ import { Button } from "@/components/ui/button";
 		<meta name="generator" content={Astro.generator} />
 		<title>sigloop</title>
 	</head>
-	<body class="flex flex-col min-h-screen bg-zinc-100 gap-24">
+	<body class="flex flex-col min-h-screen bg-zinc-100">
 		<section
 			id="hero"
 			class="w-full h-screen flex flex-col items-center justify-center"
 		>
 			<img src="/logo.png" alt="logo symbol" class="invert w-32" />
-			<h1 class="text-8xl font-semibold mt-6">sigloop</h1>
-			<h2 class="text-lg mt-3">
-				friendly wallet abstraction made 4 agents
-			</h2>
+			<h1 class="text-6xl font-semibold mt-6">sigloop</h1>
+			<h2 class="text-lg mt-3">wallet abstraction friendly 4 agents</h2>
 
 			<div class="grid grid-cols-2 mt-6 gap-3">
 				<Button>get started</Button>
@@ -29,7 +27,66 @@ import { Button } from "@/components/ui/button";
 			</div>
 		</section>
 
-		<section id="about">
+		<section id="introduction" class="mx-auto max-w-7xl px-6 lg:px-8">
+			<div class="mx-auto max-w-2xl lg:max-w-none">
+				<div class="text-center">
+					<h2
+						class="text-4xl font-semibold tracking-tight text-balance text-gray-900 sm:text-5xl"
+					>
+						Trusted by creators worldwide
+					</h2>
+					<p class="mt-4 text-lg/8 text-gray-600">
+						Lorem ipsum dolor sit amet consect adipisicing possimus.
+					</p>
+				</div>
+				<dl
+					class="mt-16 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4"
+				>
+					<div class="flex flex-col bg-gray-400/5 p-8">
+						<dt class="text-sm/6 font-semibold text-gray-600">
+							Creators on the platform
+						</dt>
+						<dd
+							class="order-first text-3xl font-semibold tracking-tight text-gray-900"
+						>
+							8,000+
+						</dd>
+					</div>
+					<div class="flex flex-col bg-gray-400/5 p-8">
+						<dt class="text-sm/6 font-semibold text-gray-600">
+							Flat platform fee
+						</dt>
+						<dd
+							class="order-first text-3xl font-semibold tracking-tight text-gray-900"
+						>
+							3%
+						</dd>
+					</div>
+					<div class="flex flex-col bg-gray-400/5 p-8">
+						<dt class="text-sm/6 font-semibold text-gray-600">
+							Uptime guarantee
+						</dt>
+						<dd
+							class="order-first text-3xl font-semibold tracking-tight text-gray-900"
+						>
+							99.9%
+						</dd>
+					</div>
+					<div class="flex flex-col bg-gray-400/5 p-8">
+						<dt class="text-sm/6 font-semibold text-gray-600">
+							Paid out to creators
+						</dt>
+						<dd
+							class="order-first text-3xl font-semibold tracking-tight text-gray-900"
+						>
+							$70M
+						</dd>
+					</div>
+				</dl>
+			</div>
+		</section>
+
+		<section id="about" class="mt-48">
 			<div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 				<div
 					class="relative isolate overflow-hidden bg-gray-900 px-6 py-20 sm:rounded-3xl sm:px-10 sm:py-24 lg:py-24 xl:px-24"
@@ -153,7 +210,7 @@ import { Button } from "@/components/ui/button";
 			</div>
 		</section>
 
-		<footer>
+		<footer class="mt-48">
 			<div
 				class="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8"
 			>
