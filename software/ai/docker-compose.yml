@@ -48,6 +48,26 @@ services:
     volumes:
       - ./webapp/src:/app/src
 
+  rest:
+    build:
+      context: ./rest
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: "3002"
+      BACKEND_URL: "http://backend:3001"
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./rest/src:/app/src
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3002/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   contract-deployer:
     image: ghcr.io/foundry-rs/foundry:latest
     working_dir: /contracts
