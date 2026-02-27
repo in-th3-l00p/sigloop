@@ -1,0 +1,53 @@
+{
+  "name": "@sigloop/agent",
+  "version": "0.0.1",
+  "description": "session key provisioning and agent wallet creation for ERC-7579 smart accounts",
+  "author": "in-th3-l00p",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./advanced": {
+      "import": "./dist/advanced.js",
+      "types": "./dist/advanced.d.ts"
+    },
+    "./constants": {
+      "import": "./dist/constants.js",
+      "types": "./dist/constants.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "example:basic": "tsx examples/basic-agent.ts",
+    "example:session-key": "tsx examples/session-key.ts",
+    "example:composable": "tsx examples/composable.ts"
+  },
+  "dependencies": {
+    "viem": "^2.28.0",
+    "@sigloop/policy": "file:../policy"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "keywords": [
+    "session-key",
+    "agent",
+    "erc-7579",
+    "smart-account"
+  ]
+}

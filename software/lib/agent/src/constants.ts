@@ -1,0 +1,9 @@
+export const DEFAULT_SESSION_DURATION = 86400
+
+export const VALIDATOR_MODULE_TYPE_ID = 1n
+
+export const SIGNATURE_LENGTH = 85
+
+export const ADDRESS_BYTE_LENGTH = 20
+
+export const ECDSA_SIGNATURE_LENGTH = 65
