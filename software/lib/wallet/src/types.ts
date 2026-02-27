@@ -12,6 +12,33 @@ export type TransactionRequest = {
   data?: Hex
 }
 
+export type CreateWalletConfig = {
+  chain: Chain
+  rpcUrl: string
+  sponsorGas?: boolean
+  gasToken?: Address
+}
+
+export type LoadWalletConfig = {
+  privateKey: Hex
+  chain: Chain
+  rpcUrl: string
+  sponsorGas?: boolean
+  gasToken?: Address
+}
+
+export type WalletConfig = {
+  privateKey: Hex
+  chain: Chain
+  rpcUrl: string
+  publicRpcUrl?: string
+  index?: bigint
+  sponsorGas?: boolean
+  gasToken?: Address
+  entryPointVersion?: EntryPointVersion
+  kernelVersion?: KernelVersion
+}
+
 export type ValidatorConfig = {
   signer: any
   entryPointVersion?: EntryPointVersion
@@ -44,15 +71,3 @@ export type PaymasterOptions =
   | { type: "sponsor"; paymasterClient: any }
   | { type: "erc20"; paymasterClient: any; gasToken: Address }
   | { type: "none" }
-
-export type WalletConfig = {
-  privateKey: Hex
-  chain: Chain
-  rpcUrl: string
-  publicRpcUrl?: string
-  index?: bigint
-  sponsorGas?: boolean
-  gasToken?: Address
-  entryPointVersion?: EntryPointVersion
-  kernelVersion?: KernelVersion
-}

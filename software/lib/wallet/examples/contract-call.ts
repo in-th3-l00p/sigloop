@@ -1,12 +1,12 @@
 import { config } from "dotenv"
 config({ path: new URL(".env", import.meta.url) })
-import { createWallet, generatePrivateKey, getGasTokenAddress, getGasTokens, encodeFunctionData } from "../src/index.js"
+import { loadWallet, getGasTokenAddress, getGasTokens, encodeFunctionData } from "../src/index.js"
 import { sepolia } from "viem/chains"
 import { parseUnits } from "viem"
-import type { Abi, Hex } from "viem"
+import type { Abi } from "viem"
 
 const RPC_URL = process.env.ZERODEV_RPC_URL!
-const PRIVATE_KEY = (process.env.PRIVATE_KEY ?? generatePrivateKey()) as `0x${string}`
+const PRIVATE_KEY = process.env.PRIVATE_KEY! as `0x${string}`
 
 const ERC20_ABI: Abi = [
   {
@@ -29,13 +29,6 @@ const ERC20_ABI: Abi = [
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "nonpayable",
   },
-  {
-    type: "function",
-    name: "balanceOf",
-    inputs: [{ name: "account", type: "address", internalType: "address" }],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
-  },
 ]
 
 const USDC_SEPOLIA = "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238"
@@ -49,7 +42,7 @@ async function main() {
   const usdc = getGasTokenAddress(sepolia.id, "USDC")
   console.log("USDC address:", usdc)
 
-  const wallet = await createWallet({
+  const wallet = await loadWallet({
     privateKey: PRIVATE_KEY,
     chain: sepolia,
     rpcUrl: RPC_URL,
@@ -68,11 +61,10 @@ async function main() {
   console.log("Transfer tx:", txHash)
 
   console.log("\n--- ERC-20 Approve + Transfer Batch ---")
-  const spender = "0x0000000000000000000000000000000000000002"
   const approveData = encodeFunctionData({
     abi: ERC20_ABI,
     functionName: "approve",
-    args: [spender, parseUnits("100", 6)],
+    args: ["0x0000000000000000000000000000000000000002", parseUnits("100", 6)],
   })
   const transferData = encodeFunctionData({
     abi: ERC20_ABI,

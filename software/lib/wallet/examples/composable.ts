@@ -4,7 +4,6 @@ import { createPublicClient, http } from "viem"
 import { sepolia } from "viem/chains"
 import {
   createSigner,
-  randomSigner,
   generatePrivateKey,
   createEcdsaValidator,
   createSmartAccount,
@@ -14,7 +13,7 @@ import {
   sendTransactions,
   signMessage,
   verifySignature,
-} from "../src/index.js"
+} from "../src/advanced.js"
 import { parseEther } from "viem"
 
 const BUNDLER_RPC_URL = process.env.ZERODEV_RPC_URL!

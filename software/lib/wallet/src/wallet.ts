@@ -1,13 +1,15 @@
 import { createPublicClient, http } from "viem"
 import type { Hex, TypedDataDefinition, Abi } from "viem"
-import { createSigner } from "./signer.js"
+import { createSigner, randomSigner } from "./signer.js"
 import { createEcdsaValidator } from "./validator.js"
 import { createSmartAccount } from "./account.js"
 import { createPaymaster } from "./paymaster.js"
 import { createAccountClient } from "./client.js"
-import { sendTransaction, sendTransactions, sendUserOperation, sendContractCall } from "./transactions.js"
+import { sendTransaction, sendTransactions, sendContractCall } from "./transactions.js"
 import { signMessage, signTypedData, verifySignature } from "./signing.js"
 import type {
+  CreateWalletConfig,
+  LoadWalletConfig,
   WalletConfig,
   TransactionRequest,
   PaymasterOptions,
@@ -15,14 +17,10 @@ import type {
 
 export type Wallet = {
   address: `0x${string}`
-  account: any
-  client: any
-  publicClient: any
-  paymasterClient: any | null
+  privateKey: Hex
 
   sendTransaction: (tx: TransactionRequest) => Promise<Hex>
   sendTransactions: (txs: TransactionRequest[]) => Promise<Hex>
-  sendUserOperation: (txs: TransactionRequest[]) => Promise<{ hash: Hex; wait: () => Promise<any> }>
   sendContractCall: (params: {
     address: `0x${string}`
     abi: Abi
@@ -36,25 +34,38 @@ export type Wallet = {
   verifySignature: (message: string, signature: Hex) => Promise<boolean>
 }
 
-export async function createWallet(config: WalletConfig): Promise<Wallet> {
-  const signer = createSigner(config.privateKey)
+export async function createWallet(config: CreateWalletConfig): Promise<Wallet> {
+  const { privateKey } = randomSigner()
+  return buildWallet(privateKey, config)
+}
+
+export async function loadWallet(config: LoadWalletConfig): Promise<Wallet> {
+  return buildWallet(config.privateKey, config)
+}
+
+export async function buildWallet(
+  privateKey: Hex,
+  config: CreateWalletConfig | LoadWalletConfig | WalletConfig,
+): Promise<Wallet> {
+  const fullConfig = config as WalletConfig
+  const signer = createSigner(privateKey)
 
   const publicClient = createPublicClient({
     chain: config.chain,
-    transport: http(config.publicRpcUrl ?? config.rpcUrl),
+    transport: http(fullConfig.publicRpcUrl ?? config.rpcUrl),
   })
 
   const validator = await createEcdsaValidator(publicClient, {
     signer,
-    entryPointVersion: config.entryPointVersion,
-    kernelVersion: config.kernelVersion,
+    entryPointVersion: fullConfig.entryPointVersion,
+    kernelVersion: fullConfig.kernelVersion,
   })
 
   const account = await createSmartAccount(publicClient, {
     validator,
-    index: config.index,
-    entryPointVersion: config.entryPointVersion,
-    kernelVersion: config.kernelVersion,
+    index: fullConfig.index,
+    entryPointVersion: fullConfig.entryPointVersion,
+    kernelVersion: fullConfig.kernelVersion,
   })
 
   let paymasterClient: any = null
@@ -90,14 +101,10 @@ export async function createWallet(config: WalletConfig): Promise<Wallet> {
 
   return {
     address: account.address,
-    account,
-    client,
-    publicClient,
-    paymasterClient,
+    privateKey,
 
     sendTransaction: (tx) => sendTransaction(client, tx),
     sendTransactions: (txs) => sendTransactions(client, txs),
-    sendUserOperation: (txs) => sendUserOperation(client, txs),
     sendContractCall: (params) => sendContractCall(client, params),
 
     signMessage: (message) => signMessage(client, message),

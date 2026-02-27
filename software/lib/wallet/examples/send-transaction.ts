@@ -1,14 +1,14 @@
 import { config } from "dotenv"
 config({ path: new URL(".env", import.meta.url) })
-import { createWallet, generatePrivateKey } from "../src/index.js"
+import { loadWallet } from "../src/index.js"
 import { sepolia } from "viem/chains"
 import { zeroAddress } from "viem"
 
 const RPC_URL = process.env.ZERODEV_RPC_URL!
-const PRIVATE_KEY = (process.env.PRIVATE_KEY ?? generatePrivateKey()) as `0x${string}`
+const PRIVATE_KEY = process.env.PRIVATE_KEY! as `0x${string}`
 
 async function main() {
-  const wallet = await createWallet({
+  const wallet = await loadWallet({
     privateKey: PRIVATE_KEY,
     chain: sepolia,
     rpcUrl: RPC_URL,
@@ -31,14 +31,6 @@ async function main() {
     { to: zeroAddress, value: 0n, data: "0x" },
   ])
   console.log("Batch tx hash:", batchHash)
-
-  console.log("\n--- Send User Operation ---")
-  const op = await wallet.sendUserOperation([
-    { to: zeroAddress, value: 0n, data: "0x" },
-  ])
-  console.log("UserOp hash:", op.hash)
-  const receipt = await op.wait()
-  console.log("Receipt:", receipt.receipt.transactionHash)
 }
 
 main().catch(console.error)

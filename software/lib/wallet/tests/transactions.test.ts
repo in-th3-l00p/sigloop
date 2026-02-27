@@ -4,6 +4,9 @@ import { sendTransaction, sendTransactions, sendUserOperation, sendContractCall 
 
 function createMockClient() {
   return {
+    account: {
+      encodeCalls: vi.fn().mockResolvedValue("0xencodedcalldata"),
+    },
     sendTransaction: vi.fn().mockResolvedValue("0xtxhash"),
     sendUserOperation: vi.fn().mockResolvedValue("0xuserophash"),
     waitForUserOperationReceipt: vi.fn().mockResolvedValue({
@@ -103,16 +106,25 @@ describe("sendTransactions", () => {
 describe("sendUserOperation", () => {
   it("sends a user operation and returns hash with wait function", async () => {
     const client = createMockClient()
-    const result = await sendUserOperation(client, "0xcalldata")
+    const txs = [
+      { to: "0x1234567890123456789012345678901234567890" as const, value: 100n },
+    ]
+    const result = await sendUserOperation(client, txs)
 
-    expect(client.sendUserOperation).toHaveBeenCalledWith({ callData: "0xcalldata" })
+    expect(client.account.encodeCalls).toHaveBeenCalledWith([
+      { to: "0x1234567890123456789012345678901234567890", value: 100n, data: "0x" },
+    ])
+    expect(client.sendUserOperation).toHaveBeenCalledWith({ callData: "0xencodedcalldata" })
     expect(result.hash).toBe("0xuserophash")
     expect(typeof result.wait).toBe("function")
   })
 
   it("wait function calls waitForUserOperationReceipt", async () => {
     const client = createMockClient()
-    const result = await sendUserOperation(client, "0xcalldata")
+    const txs = [
+      { to: "0x1234567890123456789012345678901234567890" as const },
+    ]
+    const result = await sendUserOperation(client, txs)
 
     const receipt = await result.wait()
 

@@ -33,13 +33,45 @@ vi.mock("@zerodev/sdk", async (importOriginal) => {
   }
 })
 
-import { createWallet } from "../src/wallet.js"
+import { createWallet, loadWallet, buildWallet } from "../src/wallet.js"
 import { createKernelAccount, createKernelAccountClient, createZeroDevPaymasterClient } from "@zerodev/sdk"
 import { signerToEcdsaValidator } from "@zerodev/ecdsa-validator"
 
 describe("createWallet", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it("generates a private key and returns wallet with address", async () => {
+    const wallet = await createWallet({
+      chain: sepolia,
+      rpcUrl: "https://rpc.zerodev.app/test",
+    })
+
+    expect(wallet.address).toBe("0xABCD1234ABCD1234ABCD1234ABCD1234ABCD1234")
+    expect(wallet.privateKey).toBeDefined()
+    expect(wallet.privateKey).toMatch(/^0x[0-9a-f]{64}$/i)
+  })
+
+  it("exposes all wallet methods", async () => {
+    const wallet = await createWallet({
+      chain: sepolia,
+      rpcUrl: "https://rpc.zerodev.app/test",
+    })
+
+    expect(typeof wallet.sendTransaction).toBe("function")
+    expect(typeof wallet.sendTransactions).toBe("function")
+    expect(typeof wallet.sendContractCall).toBe("function")
+    expect(typeof wallet.signMessage).toBe("function")
+    expect(typeof wallet.signTypedData).toBe("function")
+    expect(typeof wallet.verifySignature).toBe("function")
+  })
+})
+
+describe("loadWallet", () => {
+  const privateKey = generatePrivateKey()
   const baseConfig = {
-    privateKey: generatePrivateKey(),
+    privateKey,
     chain: sepolia,
     rpcUrl: "https://rpc.zerodev.app/test",
   } as const
@@ -48,24 +80,15 @@ describe("createWallet", () => {
     vi.clearAllMocks()
   })
 
-  it("creates a wallet with address and all methods", async () => {
-    const wallet = await createWallet({ ...baseConfig })
+  it("loads wallet with provided private key", async () => {
+    const wallet = await loadWallet({ ...baseConfig })
 
     expect(wallet.address).toBe("0xABCD1234ABCD1234ABCD1234ABCD1234ABCD1234")
-    expect(wallet.account).toBeDefined()
-    expect(wallet.client).toBeDefined()
-    expect(wallet.publicClient).toBeDefined()
-    expect(typeof wallet.sendTransaction).toBe("function")
-    expect(typeof wallet.sendTransactions).toBe("function")
-    expect(typeof wallet.sendUserOperation).toBe("function")
-    expect(typeof wallet.sendContractCall).toBe("function")
-    expect(typeof wallet.signMessage).toBe("function")
-    expect(typeof wallet.signTypedData).toBe("function")
-    expect(typeof wallet.verifySignature).toBe("function")
+    expect(wallet.privateKey).toBe(privateKey)
   })
 
   it("calls signerToEcdsaValidator with the derived signer", async () => {
-    await createWallet({ ...baseConfig })
+    await loadWallet({ ...baseConfig })
 
     expect(signerToEcdsaValidator).toHaveBeenCalledWith(
       expect.anything(),
@@ -76,7 +99,7 @@ describe("createWallet", () => {
   })
 
   it("calls createKernelAccount with the validator", async () => {
-    await createWallet({ ...baseConfig })
+    await loadWallet({ ...baseConfig })
 
     expect(createKernelAccount).toHaveBeenCalledWith(
       expect.anything(),
@@ -86,61 +109,29 @@ describe("createWallet", () => {
     )
   })
 
-  it("does not create paymaster when sponsorGas is false", async () => {
-    const wallet = await createWallet({ ...baseConfig })
-
+  it("does not create paymaster by default", async () => {
+    await loadWallet({ ...baseConfig })
     expect(createZeroDevPaymasterClient).not.toHaveBeenCalled()
-    expect(wallet.paymasterClient).toBeNull()
   })
 
   it("creates paymaster when sponsorGas is true", async () => {
-    const wallet = await createWallet({
-      ...baseConfig,
-      sponsorGas: true,
-    })
+    await loadWallet({ ...baseConfig, sponsorGas: true })
 
     expect(createZeroDevPaymasterClient).toHaveBeenCalledWith({
       chain: sepolia,
       transport: expect.anything(),
     })
-    expect(wallet.paymasterClient).toBeDefined()
   })
 
   it("creates erc20 paymaster when gasToken is provided", async () => {
     const gasToken = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" as const
-
-    const wallet = await createWallet({
-      ...baseConfig,
-      gasToken,
-    })
+    await loadWallet({ ...baseConfig, gasToken })
 
     expect(createZeroDevPaymasterClient).toHaveBeenCalled()
-    expect(wallet.paymasterClient).toBeDefined()
-  })
-
-  it("passes index to account creation", async () => {
-    await createWallet({
-      ...baseConfig,
-      index: 3n,
-    })
-
-    expect(createKernelAccount).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({ index: 3n }),
-    )
-  })
-
-  it("uses publicRpcUrl when provided", async () => {
-    await createWallet({
-      ...baseConfig,
-      publicRpcUrl: "https://eth-sepolia.g.alchemy.com/v2/test",
-    })
-
-    expect(signerToEcdsaValidator).toHaveBeenCalled()
   })
 
   it("sendTransaction delegates to client", async () => {
-    const wallet = await createWallet({ ...baseConfig })
+    const wallet = await loadWallet({ ...baseConfig })
 
     const result = await wallet.sendTransaction({
       to: "0x1234567890123456789012345678901234567890",
@@ -151,7 +142,7 @@ describe("createWallet", () => {
   })
 
   it("sendTransactions delegates to client with batch", async () => {
-    const wallet = await createWallet({ ...baseConfig })
+    const wallet = await loadWallet({ ...baseConfig })
 
     const result = await wallet.sendTransactions([
       { to: "0x1234567890123456789012345678901234567890" },
@@ -162,15 +153,13 @@ describe("createWallet", () => {
   })
 
   it("signMessage delegates to client", async () => {
-    const wallet = await createWallet({ ...baseConfig })
-
+    const wallet = await loadWallet({ ...baseConfig })
     const result = await wallet.signMessage("hello")
-
     expect(result).toBe("0xsignature")
   })
 
   it("signTypedData delegates to client", async () => {
-    const wallet = await createWallet({ ...baseConfig })
+    const wallet = await loadWallet({ ...baseConfig })
 
     const result = await wallet.signTypedData({
       domain: { name: "Test", version: "1", chainId: 1 },
@@ -183,15 +172,47 @@ describe("createWallet", () => {
   })
 
   it("verifySignature uses account address as signer", async () => {
-    const wallet = await createWallet({ ...baseConfig })
-
+    const wallet = await loadWallet({ ...baseConfig })
     const result = await wallet.verifySignature("hello", "0xsig")
-
     expect(result).toBe(true)
+  })
+})
+
+describe("buildWallet (advanced)", () => {
+  const privateKey = generatePrivateKey()
+  const baseConfig = {
+    privateKey,
+    chain: sepolia,
+    rpcUrl: "https://rpc.zerodev.app/test",
+  } as const
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it("passes index to account creation", async () => {
+    await buildWallet(privateKey, {
+      ...baseConfig,
+      index: 3n,
+    })
+
+    expect(createKernelAccount).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ index: 3n }),
+    )
+  })
+
+  it("uses publicRpcUrl when provided", async () => {
+    await buildWallet(privateKey, {
+      ...baseConfig,
+      publicRpcUrl: "https://eth-sepolia.g.alchemy.com/v2/test",
+    })
+
+    expect(signerToEcdsaValidator).toHaveBeenCalled()
   })
 
   it("passes custom kernel version and entry point", async () => {
-    await createWallet({
+    await buildWallet(privateKey, {
       ...baseConfig,
       kernelVersion: "0.3.2",
       entryPointVersion: "0.7",
