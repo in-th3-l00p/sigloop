@@ -4,7 +4,10 @@ config({ path: new URL(".env", import.meta.url) })
 import { KMSClient } from "@aws-sdk/client-kms"
 import { createKmsSigner, createKmsKey, getKmsPublicKey, deriveEthAddressFromSpki } from "../src/advanced.js"
 
-const kmsClient = new KMSClient({ region: process.env.AWS_REGION! })
+const kmsClient = new KMSClient({
+  region: process.env.AWS_REGION!,
+  ...(process.env.KMS_ENDPOINT && { endpoint: process.env.KMS_ENDPOINT }),
+})
 
 async function main() {
   console.log("--- Step 1: Create KMS Key ---")
