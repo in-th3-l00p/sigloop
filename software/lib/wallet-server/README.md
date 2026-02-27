@@ -1,6 +1,6 @@
 # @sigloop/wallet-server
 
-AWS KMS-backed server-side wallets for ERC-4337 smart accounts.
+AWS KMS key management for Ethereum signers. Creates and loads secp256k1 keys in AWS KMS, exposing them as viem-compatible signers.
 
 ## Install
 
@@ -11,27 +11,22 @@ pnpm add @sigloop/wallet-server @aws-sdk/client-kms viem
 ## Usage
 
 ```ts
-import { createKmsWallet, loadKmsWallet } from "@sigloop/wallet-server"
+import { createKey, loadKey } from "@sigloop/wallet-server"
 import { KMSClient } from "@aws-sdk/client-kms"
-import { sepolia } from "viem/chains"
 
 const kmsClient = new KMSClient({ region: "us-east-1" })
 
-const wallet = await createKmsWallet({
+const key = await createKey({
   kmsClient,
-  chain: sepolia,
-  rpcUrl: "https://rpc.zerodev.app/api/v2/bundler/YOUR_PROJECT_ID",
-  sponsorGas: true,
-  alias: "my-agent-wallet",
+  alias: "my-agent-key",
 })
 
-console.log(wallet.address)
-console.log(wallet.keyId)
+console.log(key.address)
+console.log(key.keyId)
 
-const signature = await wallet.signMessage("hello")
-const valid = await wallet.verifySignature("hello", signature)
+const signature = await key.signer.signMessage({ message: "hello" })
 
-await wallet.sendTransaction({ to: "0x...", value: 0n })
+const reloaded = await loadKey({ kmsClient, keyId: key.keyId })
 ```
 
 ## Documentation
@@ -43,8 +38,8 @@ See [docs/](docs/README.md) for the full API reference, guides, and examples.
 ```bash
 pnpm build              # compile
 pnpm test               # run tests
-pnpm example:basic      # create KMS wallet, sign, verify, reload
-pnpm example:composable # advanced composable API with KMS signer
+pnpm example:basic      # create KMS key, sign, reload
+pnpm example:composable # advanced composable API with KMS primitives
 ```
 
 ## License

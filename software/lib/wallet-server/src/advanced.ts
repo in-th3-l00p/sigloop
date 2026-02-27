@@ -1,5 +1,5 @@
-export { createKmsWallet, loadKmsWallet } from "./wallet.js"
-export type { KmsWallet } from "./wallet.js"
+export { createKey, loadKey } from "./key.js"
+export type { KmsKey } from "./key.js"
 
 export { createKmsSigner } from "./kms/signer.js"
 export { createKmsKey, getKmsPublicKey } from "./kms/client.js"
@@ -10,11 +10,7 @@ export * from "./constants.js"
 
 export type {
   KmsConfig,
-  KmsWalletConfig,
-  CreateKmsWalletConfig,
   CreateKmsKeyConfig,
   KmsSignerResult,
   DerSignature,
-  EntryPointVersion,
-  KernelVersion,
 } from "./types.js"

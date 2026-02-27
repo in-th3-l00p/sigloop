@@ -10,57 +10,42 @@ pnpm add @sigloop/wallet-server @aws-sdk/client-kms viem
 
 Configure AWS credentials via environment variables, shared credentials file, or IAM role. The KMS key requires `kms:CreateKey`, `kms:Sign`, and `kms:GetPublicKey` permissions.
 
-## Create a New KMS Wallet
+## Create a New KMS Key
 
 ```ts
-import { createKmsWallet } from "@sigloop/wallet-server"
+import { createKey } from "@sigloop/wallet-server"
 import { KMSClient } from "@aws-sdk/client-kms"
-import { sepolia } from "viem/chains"
 
 const kmsClient = new KMSClient({ region: "us-east-1" })
 
-const wallet = await createKmsWallet({
+const key = await createKey({
   kmsClient,
-  chain: sepolia,
-  rpcUrl: "https://rpc.zerodev.app/api/v2/bundler/YOUR_PROJECT_ID",
-  sponsorGas: true,
-  alias: "my-agent-wallet",
+  alias: "my-agent-key",
 })
 
-console.log(wallet.address)  // smart account address
-console.log(wallet.keyId)    // save this to restore later
+console.log(key.address)    // derived Ethereum address
+console.log(key.keyId)      // save this to reload later
+console.log(key.publicKey)  // hex-encoded public key
 ```
 
-## Load an Existing Wallet
+## Load an Existing Key
 
 ```ts
-import { loadKmsWallet } from "@sigloop/wallet-server"
+import { loadKey } from "@sigloop/wallet-server"
 import { KMSClient } from "@aws-sdk/client-kms"
-import { sepolia } from "viem/chains"
 
 const kmsClient = new KMSClient({ region: "us-east-1" })
 
-const wallet = await loadKmsWallet({
+const key = await loadKey({
   kmsClient,
   keyId: "arn:aws:kms:us-east-1:123456789:key/abcd-1234",
-  chain: sepolia,
-  rpcUrl: "https://rpc.zerodev.app/api/v2/bundler/YOUR_PROJECT_ID",
-  sponsorGas: true,
 })
 ```
 
-## Send a Transaction
+## Sign a Message
+
+The returned `signer` is a standard viem `LocalAccount`:
 
 ```ts
-const txHash = await wallet.sendTransaction({
-  to: "0x...",
-  value: 0n,
-})
-```
-
-## Sign and Verify
-
-```ts
-const signature = await wallet.signMessage("hello")
-const valid = await wallet.verifySignature("hello", signature)
+const signature = await key.signer.signMessage({ message: "hello" })
 ```

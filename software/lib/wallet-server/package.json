@@ -1,7 +1,7 @@
 {
   "name": "@sigloop/wallet-server",
   "version": "0.0.1",
-  "description": "AWS KMS-backed server-side wallet for ERC-4337 smart accounts",
+  "description": "AWS KMS key management for Ethereum signers",
   "author": "in-th3-l00p",
   "license": "MIT",
   "type": "module",
@@ -30,12 +30,11 @@
     "clean": "rm -rf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "example:basic": "tsx examples/basic-kms-wallet.ts",
+    "example:basic": "tsx examples/basic-kms-key.ts",
     "example:composable": "tsx examples/composable-kms.ts"
   },
   "dependencies": {
     "@aws-sdk/client-kms": "^3.700.0",
-    "@sigloop/wallet": "file:../wallet",
     "viem": "^2.28.0"
   },
   "devDependencies": {
@@ -46,12 +45,10 @@
     "vitest": "^3.0.0"
   },
   "keywords": [
-    "erc-4337",
-    "smart-account",
-    "account-abstraction",
     "aws-kms",
-    "server-wallet",
-    "zerodev",
-    "kernel"
+    "ethereum",
+    "signer",
+    "secp256k1",
+    "viem"
   ]
 }

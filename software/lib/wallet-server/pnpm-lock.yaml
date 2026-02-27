@@ -11,9 +11,6 @@ importers:
       '@aws-sdk/client-kms':
         specifier: ^3.700.0
         version: 3.999.0
-      '@sigloop/wallet':
-        specifier: file:../wallet
-        version: file:../wallet(typescript@5.9.3)
       viem:
         specifier: ^2.28.0
         version: 2.46.3(typescript@5.9.3)
@@ -470,9 +467,6 @@ packages:
   '@scure/bip39@1.6.0':
     resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
 
-  '@sigloop/wallet@file:../wallet':
-    resolution: {directory: ../wallet, type: directory}
-
   '@smithy/abort-controller@4.2.10':
     resolution: {integrity: sha512-qocxM/X4XGATqQtUkbE9SPUB6wekBi+FyJOMbPj0AhvyvFGYEmOlz6VB22iMePCQsFmMIvFSeViDvA7mZJG47g==}
     engines: {node: '>=18.0.0'}
@@ -686,17 +680,6 @@ packages:
   '@vitest/utils@3.2.4':
     resolution: {integrity: sha512-fB2V0JFrQSMsCo9HiSq3Ezpdv4iYaXRG1Sx8edX3MwxfyNn83mKiGzOcH+Fkxt4MHxr3y42fQi1oeAInqgX2QA==}
 
-  '@zerodev/ecdsa-validator@5.4.9':
-    resolution: {integrity: sha512-9NVE8/sQIKRo42UOoYKkNdmmHJY8VlT4t+2MHD2ipLg21cpbY9fS17TGZh61+Bl3qlqc8pP23I6f89z9im7kuA==}
-    peerDependencies:
-      '@zerodev/sdk': ^5.4.13
-      viem: ^2.28.0
-
-  '@zerodev/sdk@5.5.7':
-    resolution: {integrity: sha512-Sf4G13yi131H8ujun64obvXIpk1UWn64GiGJjfvGx8aIKg+OWTRz9AZHgGKK+bE/evAmqIg4nchuSvKPhOau1w==}
-    peerDependencies:
-      viem: ^2.28.0
-
   abitype@1.2.3:
     resolution: {integrity: sha512-Ofer5QUnuUdTFsBRwARMoWKOH1ND5ehwYhJ3OJ/BQO+StkwQjHw0XyVh4vDttzHB7QOFhPHa/o413PJ82gU/Tg==}
     peerDependencies:
@@ -837,11 +820,6 @@ packages:
   rollup@4.59.0:
     resolution: {integrity: sha512-2oMpl67a3zCH9H79LeMcbDhXW/UmWG/y2zuqnF2jQq5uq9TbM9TVyXvA4+t+ne2IIkBdrLpAaRQAvo7YI/Yyeg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
-    hasBin: true
-
-  semver@7.7.4:
-    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
-    engines: {node: '>=10'}
     hasBin: true
 
   siginfo@2.0.0:
@@ -1503,17 +1481,6 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
-  '@sigloop/wallet@file:../wallet(typescript@5.9.3)':
-    dependencies:
-      '@zerodev/ecdsa-validator': 5.4.9(@zerodev/sdk@5.5.7(viem@2.46.3(typescript@5.9.3)))(viem@2.46.3(typescript@5.9.3))
-      '@zerodev/sdk': 5.5.7(viem@2.46.3(typescript@5.9.3))
-      viem: 2.46.3(typescript@5.9.3)
-    transitivePeerDependencies:
-      - bufferutil
-      - typescript
-      - utf-8-validate
-      - zod
-
   '@smithy/abort-controller@4.2.10':
     dependencies:
       '@smithy/types': 4.13.0
@@ -1843,16 +1810,6 @@ snapshots:
       loupe: 3.2.1
       tinyrainbow: 2.0.0
 
-  '@zerodev/ecdsa-validator@5.4.9(@zerodev/sdk@5.5.7(viem@2.46.3(typescript@5.9.3)))(viem@2.46.3(typescript@5.9.3))':
-    dependencies:
-      '@zerodev/sdk': 5.5.7(viem@2.46.3(typescript@5.9.3))
-      viem: 2.46.3(typescript@5.9.3)
-
-  '@zerodev/sdk@5.5.7(viem@2.46.3(typescript@5.9.3))':
-    dependencies:
-      semver: 7.7.4
-      viem: 2.46.3(typescript@5.9.3)
-
   abitype@1.2.3(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
@@ -2012,8 +1969,6 @@ snapshots:
       '@rollup/rollup-win32-x64-gnu': 4.59.0
       '@rollup/rollup-win32-x64-msvc': 4.59.0
       fsevents: 2.3.3
-
-  semver@7.7.4: {}
 
   siginfo@2.0.0: {}
 

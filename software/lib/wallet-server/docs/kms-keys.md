@@ -2,7 +2,7 @@
 
 ## Creating Keys
 
-`createKmsWallet` automatically creates a new KMS key. You can also create keys separately using `createKmsKey`:
+`createKey` creates a new KMS key and returns a ready-to-use signer. You can also create keys separately using `createKmsKey`:
 
 ```ts
 import { createKmsKey } from "@sigloop/wallet-server"
@@ -12,8 +12,8 @@ const kmsClient = new KMSClient({ region: "us-east-1" })
 
 const keyId = await createKmsKey({
   kmsClient,
-  alias: "agent-wallet-1",
-  description: "Production agent wallet",
+  alias: "agent-key-1",
+  description: "Production agent signer",
 })
 ```
 
@@ -26,7 +26,7 @@ Aliases provide human-readable names for KMS keys. Prefix with `alias/` or let t
 ```ts
 const keyId = await createKmsKey({
   kmsClient,
-  alias: "my-wallet",       // becomes alias/my-wallet
+  alias: "my-key",       // becomes alias/my-key
 })
 ```
 
@@ -40,7 +40,7 @@ const keyId = await createKmsKey({
   tags: {
     Environment: "production",
     Team: "agents",
-    Purpose: "wallet-signer",
+    Purpose: "signer",
   },
 })
 ```
@@ -75,36 +75,5 @@ const keyId = await createKmsKey({
       },
     ],
   }),
-})
-```
-
-## Gas Sponsoring
-
-Enable `sponsorGas` to make transactions gasless. Gas is paid by your ZeroDev project's paymaster.
-
-```ts
-const wallet = await loadKmsWallet({
-  kmsClient,
-  keyId: "...",
-  chain: sepolia,
-  rpcUrl: BUNDLER_RPC_URL,
-  sponsorGas: true,
-})
-```
-
-## ERC-20 Gas Tokens
-
-Pay gas fees with ERC-20 tokens instead of the native currency:
-
-```ts
-import { loadKmsWallet } from "@sigloop/wallet-server"
-import { getGasTokenAddress } from "@sigloop/wallet"
-
-const wallet = await loadKmsWallet({
-  kmsClient,
-  keyId: "...",
-  chain: sepolia,
-  rpcUrl: BUNDLER_RPC_URL,
-  gasToken: getGasTokenAddress(sepolia.id, "USDC"),
 })
 ```
