@@ -28,8 +28,16 @@ export async function sendTransactions(
 
 export async function sendUserOperation(
   client: any,
-  callData: Hex,
+  txs: TransactionRequest[],
 ) {
+  const callData = await client.account.encodeCalls(
+    txs.map((tx) => ({
+      to: tx.to,
+      value: tx.value ?? 0n,
+      data: tx.data ?? "0x",
+    })),
+  )
+
   const hash = await client.sendUserOperation({ callData })
 
   return {

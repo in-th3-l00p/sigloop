@@ -1,3 +1,5 @@
+import { config } from "dotenv"
+config({ path: new URL(".env", import.meta.url) })
 import { createPublicClient, http } from "viem"
 import { sepolia } from "viem/chains"
 import {
@@ -15,7 +17,8 @@ import {
 } from "../src/index.js"
 import { parseEther } from "viem"
 
-const RPC_URL = process.env.ZERODEV_RPC_URL!
+const BUNDLER_RPC_URL = process.env.ZERODEV_RPC_URL!
+const PUBLIC_RPC_URL = process.env.PUBLIC_RPC_URL || "https://sepolia.drpc.org"
 const PRIVATE_KEY = (process.env.PRIVATE_KEY ?? generatePrivateKey()) as `0x${string}`
 
 async function main() {
@@ -26,7 +29,7 @@ async function main() {
   console.log("\n--- Step 2: Public Client ---")
   const publicClient = createPublicClient({
     chain: sepolia,
-    transport: http(RPC_URL),
+    transport: http(PUBLIC_RPC_URL),
   })
   console.log("Chain:", sepolia.name, `(${sepolia.id})`)
 
@@ -41,7 +44,7 @@ async function main() {
   console.log("\n--- Step 5: Paymaster (sponsored gas) ---")
   const paymasterClient = createPaymaster({
     chain: sepolia,
-    rpcUrl: RPC_URL,
+    rpcUrl: BUNDLER_RPC_URL,
   })
   console.log("Paymaster client created")
 
@@ -49,7 +52,7 @@ async function main() {
   const client = createAccountClient({
     account,
     chain: sepolia,
-    rpcUrl: RPC_URL,
+    rpcUrl: BUNDLER_RPC_URL,
     publicClient,
     paymaster: {
       type: "sponsor",

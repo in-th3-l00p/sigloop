@@ -1,20 +1,21 @@
 import { createKernelAccount } from "@zerodev/sdk"
-import { getEntryPoint, KERNEL_V3_1 } from "@zerodev/sdk/constants"
+import { getEntryPoint } from "@zerodev/sdk/constants"
 import type { AccountConfig } from "./types.js"
+import { DEFAULT_ENTRY_POINT_VERSION, DEFAULT_KERNEL_VERSION } from "./constants.js"
 
 export async function createSmartAccount(
   publicClient: any,
   config: AccountConfig,
 ) {
-  const entryPoint = getEntryPoint(config.entryPointVersion ?? "0.7")
-  const kernelVersion = config.kernelVersion ?? KERNEL_V3_1
+  const entryPoint = getEntryPoint(config.entryPointVersion ?? DEFAULT_ENTRY_POINT_VERSION)
+  const kernelVersion = config.kernelVersion ?? DEFAULT_KERNEL_VERSION
 
   return createKernelAccount(publicClient, {
     plugins: {
       sudo: config.validator,
     },
     entryPoint,
-    kernelVersion: kernelVersion as typeof KERNEL_V3_1,
+    kernelVersion,
     index: config.index,
     address: config.address,
   })

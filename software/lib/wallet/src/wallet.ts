@@ -22,7 +22,7 @@ export type Wallet = {
 
   sendTransaction: (tx: TransactionRequest) => Promise<Hex>
   sendTransactions: (txs: TransactionRequest[]) => Promise<Hex>
-  sendUserOperation: (callData: Hex) => Promise<{ hash: Hex; wait: () => Promise<any> }>
+  sendUserOperation: (txs: TransactionRequest[]) => Promise<{ hash: Hex; wait: () => Promise<any> }>
   sendContractCall: (params: {
     address: `0x${string}`
     abi: Abi
@@ -97,7 +97,7 @@ export async function createWallet(config: WalletConfig): Promise<Wallet> {
 
     sendTransaction: (tx) => sendTransaction(client, tx),
     sendTransactions: (txs) => sendTransactions(client, txs),
-    sendUserOperation: (callData) => sendUserOperation(client, callData),
+    sendUserOperation: (txs) => sendUserOperation(client, txs),
     sendContractCall: (params) => sendContractCall(client, params),
 
     signMessage: (message) => signMessage(client, message),

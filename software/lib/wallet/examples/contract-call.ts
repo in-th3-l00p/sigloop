@@ -1,3 +1,5 @@
+import { config } from "dotenv"
+config({ path: new URL(".env", import.meta.url) })
 import { createWallet, generatePrivateKey, getGasTokenAddress, getGasTokens, encodeFunctionData } from "../src/index.js"
 import { sepolia } from "viem/chains"
 import { parseUnits } from "viem"
