@@ -25,7 +25,11 @@
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "example:basic": "tsx examples/basic-wallet.ts",
+    "example:send": "tsx examples/send-transaction.ts",
+    "example:contract": "tsx examples/contract-call.ts",
+    "example:composable": "tsx examples/composable.ts"
   },
   "dependencies": {
     "@zerodev/ecdsa-validator": "^5.4.9",
@@ -33,6 +37,9 @@
     "viem": "^2.28.0"
   },
   "devDependencies": {
+    "@types/node": "^25.3.2",
+    "tslib": "^2.8.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   },
