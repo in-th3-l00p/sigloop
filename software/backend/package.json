@@ -1,0 +1,36 @@
+{
+  "name": "@sigloop/backend",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "hono": "^4.7.0",
+    "@hono/node-server": "^1.13.0",
+    "@hono/node-ws": "^1.1.0",
+    "graphql": "^16.10.0",
+    "graphql-yoga": "^5.10.0",
+    "viem": "^2.28.0",
+    "@sigloop/wallet": "file:../lib/wallet",
+    "@sigloop/wallet-server": "file:../lib/wallet-server",
+    "@sigloop/policy": "file:../lib/policy",
+    "@sigloop/agent": "file:../lib/agent",
+    "@sigloop/defi": "file:../lib/defi",
+    "@sigloop/x402": "file:../lib/x402"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.0",
+    "ws": "^8.18.0",
+    "@types/ws": "^8.18.0"
+  }
+}
