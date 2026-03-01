@@ -1,6 +1,9 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach, afterEach } from "vitest"
 import { createAgentsStore } from "../../../src/stores/agents.js"
+import { createMemoryDatabase } from "../../../src/db/memory.js"
+import { initSchema } from "../../../src/db/database.js"
 import type { AgentRecord } from "../../../src/types.js"
+import type { Database } from "../../../src/db/database.js"
 
 function makeAgent(overrides?: Partial<AgentRecord>): AgentRecord {
   return {
@@ -19,11 +22,41 @@ function makeAgent(overrides?: Partial<AgentRecord>): AgentRecord {
   }
 }
 
-describe("createAgentsStore", () => {
+function setupWallet(db: Database | undefined) {
+  if (db) {
+    db.run(
+      "INSERT INTO wallets (id, address, name, chain_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+      ["w-1", "0x1111111111111111111111111111111111111111", "W1", 8453, new Date().toISOString(), new Date().toISOString()],
+    )
+    db.run(
+      "INSERT INTO wallets (id, address, name, chain_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+      ["w-2", "0x3333333333333333333333333333333333333333", "W2", 8453, new Date().toISOString(), new Date().toISOString()],
+    )
+  }
+}
+
+describe.each([
+  { name: "memory", getDb: () => undefined as Database | undefined },
+  {
+    name: "sqlite",
+    getDb: () => {
+      const db = createMemoryDatabase()
+      initSchema(db)
+      return db
+    },
+  },
+])("createAgentsStore ($name)", ({ getDb }) => {
   let store: ReturnType<typeof createAgentsStore>
+  let db: Database | undefined
 
   beforeEach(() => {
-    store = createAgentsStore()
+    db = getDb()
+    setupWallet(db)
+    store = createAgentsStore(db)
+  })
+
+  afterEach(() => {
+    db?.close()
   })
 
   it("creates and retrieves an agent", () => {

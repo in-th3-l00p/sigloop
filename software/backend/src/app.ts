@@ -1,5 +1,7 @@
 import { Hono } from "hono"
 import type { Config } from "./config.js"
+import { createDatabase, initSchema } from "./db/index.js"
+import type { Database } from "./db/index.js"
 import { createCorsMiddleware } from "./middleware/cors.js"
 import { errorHandler } from "./middleware/error-handler.js"
 import { createAuthMiddleware } from "./middleware/auth.js"
@@ -27,10 +29,17 @@ import { createAnalyticsRoutes } from "./routes/analytics.js"
 import { createGraphQLHandler } from "./graphql/index.js"
 
 export function createApp(config: Config) {
-  const walletsStore = createWalletsStore()
-  const agentsStore = createAgentsStore()
-  const policiesStore = createPoliciesStore()
-  const paymentsStore = createPaymentsStore()
+  let db: Database | undefined
+
+  if (config.dbType !== "memory" || config.dbUrl) {
+    db = createDatabase(config.dbType, config.dbUrl)
+    initSchema(db)
+  }
+
+  const walletsStore = createWalletsStore(db)
+  const agentsStore = createAgentsStore(db)
+  const policiesStore = createPoliciesStore(db)
+  const paymentsStore = createPaymentsStore(db)
   const eventsStore = createEventsStore()
 
   const keysService = createKeysService()
@@ -76,5 +85,5 @@ export function createApp(config: Config) {
     }),
   )
 
-  return { app, eventEmitter, eventsStore, config }
+  return { app, eventEmitter, eventsStore, config, db }
 }

@@ -1,6 +1,9 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach, afterEach } from "vitest"
 import { createPoliciesStore } from "../../../src/stores/policies.js"
+import { createMemoryDatabase } from "../../../src/db/memory.js"
+import { initSchema } from "../../../src/db/database.js"
 import type { PolicyRecord } from "../../../src/types.js"
+import type { Database } from "../../../src/db/database.js"
 
 function makePolicy(overrides?: Partial<PolicyRecord>): PolicyRecord {
   return {
@@ -22,11 +25,27 @@ function makePolicy(overrides?: Partial<PolicyRecord>): PolicyRecord {
   }
 }
 
-describe("createPoliciesStore", () => {
+describe.each([
+  { name: "memory", getDb: () => undefined as Database | undefined },
+  {
+    name: "sqlite",
+    getDb: () => {
+      const db = createMemoryDatabase()
+      initSchema(db)
+      return db
+    },
+  },
+])("createPoliciesStore ($name)", ({ getDb }) => {
   let store: ReturnType<typeof createPoliciesStore>
+  let db: Database | undefined
 
   beforeEach(() => {
-    store = createPoliciesStore()
+    db = getDb()
+    store = createPoliciesStore(db)
+  })
+
+  afterEach(() => {
+    db?.close()
   })
 
   it("creates and retrieves a policy", () => {

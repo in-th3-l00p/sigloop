@@ -1,6 +1,9 @@
-import { describe, it, expect, beforeEach } from "vitest"
+import { describe, it, expect, beforeEach, afterEach } from "vitest"
 import { createPaymentsStore } from "../../../src/stores/payments.js"
+import { createMemoryDatabase } from "../../../src/db/memory.js"
+import { initSchema } from "../../../src/db/database.js"
 import type { PaymentRecord } from "../../../src/types.js"
+import type { Database } from "../../../src/db/database.js"
 
 function makePayment(overrides?: Partial<PaymentRecord>): PaymentRecord {
   return {
@@ -19,11 +22,27 @@ function makePayment(overrides?: Partial<PaymentRecord>): PaymentRecord {
   }
 }
 
-describe("createPaymentsStore", () => {
+describe.each([
+  { name: "memory", getDb: () => undefined as Database | undefined },
+  {
+    name: "sqlite",
+    getDb: () => {
+      const db = createMemoryDatabase()
+      initSchema(db)
+      return db
+    },
+  },
+])("createPaymentsStore ($name)", ({ getDb }) => {
   let store: ReturnType<typeof createPaymentsStore>
+  let db: Database | undefined
 
   beforeEach(() => {
-    store = createPaymentsStore()
+    db = getDb()
+    store = createPaymentsStore(db)
+  })
+
+  afterEach(() => {
+    db?.close()
   })
 
   it("appends and retrieves a payment", () => {

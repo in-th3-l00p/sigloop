@@ -1,3 +1,5 @@
+import type { DatabaseType } from "./db/database.js"
+
 export type Config = {
   port: number
   apiKey: string
@@ -9,6 +11,8 @@ export type Config = {
   rateLimitRefillRate: number
   wsHeartbeatInterval: number
   version: string
+  dbType: DatabaseType
+  dbUrl: string
 }
 
 export function createConfig(overrides?: Partial<Config>): Config {
@@ -23,6 +27,8 @@ export function createConfig(overrides?: Partial<Config>): Config {
     rateLimitRefillRate: 10,
     wsHeartbeatInterval: 30000,
     version: "0.1.0",
+    dbType: (process.env.DB_TYPE as DatabaseType) || "memory",
+    dbUrl: process.env.DB_URL || "",
     ...overrides,
   }
 }
