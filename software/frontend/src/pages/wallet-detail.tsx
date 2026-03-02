@@ -11,13 +11,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { useWallet, useSignMessage, useSendTransaction } from "@/hooks/use-wallets"
+import { useWallet, useWalletBalance, useSignMessage, useSendTransaction } from "@/hooks/use-wallets"
 import { useAgents, useRevokeAgent } from "@/hooks/use-agents"
-import { remainingTime } from "@/lib/utils"
+import { remainingTime, formatEther } from "@/lib/utils"
 
 export function WalletDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data: wallet } = useWallet(id!)
+  const { data: balance } = useWalletBalance(id!)
   const { data: agents } = useAgents(id)
   const revokeAgent = useRevokeAgent()
   const signMessage = useSignMessage()
@@ -53,6 +54,17 @@ export function WalletDetailPage() {
               <ChainBadge chainId={wallet.chainId} />
             </div>
             <p className="text-sm text-muted-foreground mt-2">Created: {new Date(wallet.createdAt).toLocaleDateString()}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">Balance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-mono font-semibold">
+              {balance !== undefined ? formatEther(balance) : "—"}
+            </p>
           </CardContent>
         </Card>
       </div>

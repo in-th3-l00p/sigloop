@@ -25,6 +25,11 @@ export function createWalletRoutes(deps: WalletRoutesDeps) {
     return c.json({ wallet })
   })
 
+  app.get("/:id/balance", async (c) => {
+    const balance = await walletService.getBalance(c.req.param("id"))
+    return c.json({ balance })
+  })
+
   app.delete("/:id", (c) => {
     walletService.delete(c.req.param("id"))
     return c.json({ message: "Wallet deleted" })

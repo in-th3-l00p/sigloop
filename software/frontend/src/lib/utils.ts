@@ -50,6 +50,14 @@ export function remainingTime(expiresAt: number): string {
   return `${hours}h ${minutes}m`
 }
 
+export function formatEther(wei: string): string {
+  const value = BigInt(wei)
+  const eth = Number(value) / 1e18
+  if (eth === 0) return "0 ETH"
+  if (eth < 0.0001) return `${eth.toFixed(8)} ETH`
+  return `${eth.toFixed(4)} ETH`
+}
+
 export function chainName(chainId: number): string {
   const chains: Record<number, string> = {
     1: "Ethereum",

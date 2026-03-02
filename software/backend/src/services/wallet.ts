@@ -16,6 +16,7 @@ export type WalletService = {
   get: (id: string) => WalletRecord
   list: () => WalletRecord[]
   delete: (id: string) => void
+  getBalance: (id: string) => Promise<string>
   signMessage: (walletId: string, request: SignMessageRequest) => Promise<Hex>
   sendTransaction: (walletId: string, request: SendTransactionRequest) => Promise<Hex>
 }
@@ -68,6 +69,17 @@ export function createWalletService(deps: WalletServiceDeps): WalletService {
       if (!wallet) throw new Error("Wallet not found")
       walletsStore.delete(id)
       keysService.deleteKey(id)
+    },
+
+    async getBalance(id) {
+      const wallet = walletsStore.get(id)
+      if (!wallet) throw new Error("Wallet not found")
+
+      const { createPublicClient, http, defineChain } = await import("viem")
+      const chain = defineChain({ id: wallet.chainId, name: "chain", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: [deps.config.rpcUrl] } } })
+      const client = createPublicClient({ chain, transport: http(deps.config.rpcUrl) })
+      const balance = await client.getBalance({ address: wallet.address })
+      return balance.toString()
     },
 
     async signMessage(walletId, request) {

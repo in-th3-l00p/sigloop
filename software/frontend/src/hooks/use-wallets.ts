@@ -34,6 +34,16 @@ export function useDeleteWallet() {
   })
 }
 
+export function useWalletBalance(id: string) {
+  return useQuery({
+    queryKey: ["wallets", id, "balance"],
+    queryFn: () => api.wallets.balance(id),
+    select: (d) => d.balance,
+    enabled: !!id,
+    refetchInterval: 10_000,
+  })
+}
+
 export function useSignMessage() {
   return useMutation({
     mutationFn: ({ walletId, message }: { walletId: string; message: string }) =>

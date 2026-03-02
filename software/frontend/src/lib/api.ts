@@ -52,6 +52,7 @@ export const api = {
     create: (data: { name: string; chainId?: number }) =>
       request<{ wallet: WalletRecord }>("/api/wallets", { method: "POST", body: JSON.stringify(data) }),
     delete: (id: string) => request<{ message: string }>(`/api/wallets/${id}`, { method: "DELETE" }),
+    balance: (id: string) => request<{ balance: string }>(`/api/wallets/${id}/balance`),
     signMessage: (id: string, message: string) =>
       request<{ signature: string }>(`/api/wallets/${id}/sign-message`, {
         method: "POST",
