@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: "3001"
+      DB_TYPE: memory
+      API_KEY: sigloop-dev-key
+      RPC_URL: http://anvil:8545
+    depends_on:
+      anvil:
+        condition: service_started
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_TARGET: http://backend:3001
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    entrypoint: ["anvil", "--host", "0.0.0.0"]
+    ports:
+      - "8545:8545"
+    restart: unless-stopped
