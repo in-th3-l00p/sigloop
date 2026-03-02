@@ -62,7 +62,7 @@ export function createApp(config: Config) {
   api.route("/health", createHealthRoutes(config))
 
   api.use("/*", createRateLimitMiddleware(config))
-  api.use("/*", createAuthMiddleware(config))
+  // api.use("/*", createAuthMiddleware(config))
 
   api.route("/wallets", createWalletRoutes({ walletService }))
   api.route("/agents", createAgentRoutes({ agentService }))
